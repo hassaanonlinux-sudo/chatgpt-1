@@ -9,20 +9,22 @@ const REFRESH_TOKEN_TTL_SECONDS = 7 * 24 * 60 * 60;
 const REFRESH_COOKIE = 'refreshToken';
 
 function refreshCookieOptions() {
+  const isProduction = process.env.NODE_ENV === 'production';
   return {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
+    secure: isProduction,
+    sameSite: isProduction ? 'none' : 'lax',
     path: '/api/auth',
     maxAge: REFRESH_TOKEN_TTL_SECONDS * 1000,
   };
 }
 
 function clearRefreshCookie(res) {
+  const isProduction = process.env.NODE_ENV === 'production';
   res.clearCookie(REFRESH_COOKIE, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
+    secure: isProduction,
+    sameSite: isProduction ? 'none' : 'lax',
     path: '/api/auth',
   });
 }

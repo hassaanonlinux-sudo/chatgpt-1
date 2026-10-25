@@ -6,7 +6,10 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 const configuredApiUrl =
-  process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
+  process.env.NEXT_PUBLIC_API_URL ??
+  (process.env.NODE_ENV === "development"
+    ? "http://localhost:5000"
+    : "https://chatgpt-1-16fo.onrender.com");
 const API_URL = new URL(
   /^[a-z][a-z\d+.-]*:\/\//i.test(configuredApiUrl)
     ? configuredApiUrl

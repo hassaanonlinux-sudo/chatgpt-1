@@ -5,6 +5,7 @@ const aiService = require('../src/services/ai.service');
 
 process.env.ACCESS_TOKEN_SECRET = 'test-access-token-secret';
 process.env.REFRESH_TOKEN_SECRET = 'test-refresh-token-secret';
+process.env.FRONTEND_ORIGIN = 'https://chat-ui-eight-peach.vercel.app';
 
 const app = require('../src/app');
 
@@ -89,6 +90,44 @@ test('logout clears a session even when no refresh cookie is present', async () 
   const response = await fetch(`${baseUrl}/api/auth/logout`, { method: 'POST' });
 
   assert.equal(response.status, 204);
+});
+
+test('production refresh cookies support cross-site frontend requests', async () => {
+  const previousNodeEnv = process.env.NODE_ENV;
+  process.env.NODE_ENV = 'production';
+  try {
+    const response = await fetch(`${baseUrl}/api/auth/logout`, {
+      method: 'POST',
+    });
+
+    assert.equal(response.status, 204);
+    assert.match(response.headers.get('set-cookie'), /SameSite=None/i);
+    assert.match(response.headers.get('set-cookie'), /Secure/i);
+  } finally {
+    if (previousNodeEnv === undefined) {
+      delete process.env.NODE_ENV;
+    } else {
+      process.env.NODE_ENV = previousNodeEnv;
+    }
+  }
+});
+
+test('Vercel frontend origin is allowed by CORS', async () => {
+  const response = await fetch(`${baseUrl}/api/auth/register`, {
+    method: 'OPTIONS',
+    headers: {
+      Origin: 'https://chat-ui-eight-peach.vercel.app',
+      'Access-Control-Request-Method': 'POST',
+      'Access-Control-Request-Headers': 'content-type',
+    },
+  });
+
+  assert.equal(response.status, 204);
+  assert.equal(
+    response.headers.get('access-control-allow-origin'),
+    'https://chat-ui-eight-peach.vercel.app',
+  );
+  assert.equal(response.headers.get('access-control-allow-credentials'), 'true');
 });
 
 test('Google sign-in routes are no longer available', async () => {

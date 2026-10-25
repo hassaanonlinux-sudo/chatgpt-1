@@ -17,10 +17,7 @@ services:
       - key: REFRESH_TOKEN_SECRET
         generateValue: true
       - key: FRONTEND_ORIGIN
-        fromService:
-          type: web
-          name: my-chatgpt-ui
-          property: host
+        value: https://chat-ui-eight-peach.vercel.app
 
   - type: web
     name: my-chatgpt-ui

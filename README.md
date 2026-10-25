@@ -25,6 +25,21 @@ The UI uses `http://localhost:5000` by default. If you change either local
 port, set `NEXT_PUBLIC_API_URL` in `chat-ui/.env.local` and `FRONTEND_ORIGIN`
 in `Backend/.env` to match.
 
+## Deploy the frontend to Vercel
+
+Set `NEXT_PUBLIC_API_URL` in the Vercel project to
+`https://chatgpt-1-16fo.onrender.com`, then redeploy so the value is included
+in the frontend build. This is also the frontend's configured default.
+
+In the Render backend service settings, set `FRONTEND_ORIGIN` to the exact
+origin of the deployed Vercel frontend:
+`https://chat-ui-eight-peach.vercel.app` (no trailing slash). The Render
+Blueprint sets this origin; sync the Blueprint or update the Render
+environment variable manually, then redeploy the backend. If you use a custom
+Vercel domain, use that origin instead. The backend CORS policy allows one
+frontend origin, so Vercel preview deployments on different hostnames will
+not be allowed unless the backend origin is changed to match.
+
 ## Deploy with Render
 
 1. Push this project to a GitHub or GitLab repository.
@@ -48,8 +63,7 @@ down when idle and take a little time to respond after their first request.
 | `my-chatgpt-api` | `Backend` | `npm ci` | `npm start` |
 | `my-chatgpt-ui` | `chat-ui` | `npm ci && npm run build` | `npm start` |
 
-`NEXT_PUBLIC_API_URL` and `FRONTEND_ORIGIN` are connected to the corresponding
-Render service hostnames in the Blueprint. The app adds HTTPS for those
-hostnames automatically. For manual service setup, use full URLs such as
-`https://my-chatgpt-api.onrender.com` and
-`https://my-chatgpt-ui.onrender.com`.
+`NEXT_PUBLIC_API_URL` points the frontend to the backend API, and
+`FRONTEND_ORIGIN` must match the frontend's browser origin. For manual Render
+frontend setup, use the full frontend URL as the origin; for a Vercel frontend,
+use its Vercel origin instead.
