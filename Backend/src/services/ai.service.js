@@ -1,11 +1,21 @@
-require('dotenv').config();
 const OpenAI = require('openai');
 
-// Point the OpenAI client at Groq's endpoint
-const client = new OpenAI({
-  apiKey: process.env.GROQ_API_KEY,
-  baseURL: 'https://api.groq.com/openai/v1',
-});
+let client;
+
+function getClient() {
+  if (!process.env.GROQ_API_KEY) {
+    throw new Error('GROQ_API_KEY is required to generate content.');
+  }
+
+  if (!client) {
+    client = new OpenAI({
+      apiKey: process.env.GROQ_API_KEY,
+      baseURL: 'https://api.groq.com/openai/v1',
+    });
+  }
+
+  return client;
+}
 
 const systemPrompt = [
   'You are a helpful, general-purpose AI assistant.',
@@ -18,7 +28,7 @@ const systemPrompt = [
 
 async function generateContent(prompt, history = []) {
   try {
-    const response = await client.chat.completions.create({
+    const response = await getClient().chat.completions.create({
       model: process.env.GROQ_MODEL || 'openai/gpt-oss-20b',
       messages: [
         {

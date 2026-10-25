@@ -2,14 +2,15 @@
 
 ## Setup
 
-1. Add the variables from `.env.example` to `.env` and set the MongoDB
-   connection string plus two distinct, randomly generated token secrets.
+1. Copy `.env.example` to `.env`, then set a reachable MongoDB connection
+   string, a valid Groq API key, and two distinct, randomly generated token
+   secrets. Keep real credentials in `.env`, not `.env.example`.
 2. Install dependencies with `npm install`.
 3. Start MongoDB, then run `npm run dev` (or `npm start`).
 
 The API listens on port 5000 by default. `FRONTEND_ORIGIN` must match the
-frontend's origin. The server will not start without MongoDB and both token
-secrets configured.
+frontend's origin. The server will not start unless MongoDB, the Groq API key,
+and both token secrets are configured.
 
 ## Authentication API
 

@@ -3,6 +3,28 @@
 This project includes a Render Blueprint in [`render.yaml`](./render.yaml) for
 the frontend and backend web services.
 
+## Run locally
+
+1. Copy `Backend/.env.example` to `Backend/.env` and replace the placeholders
+   with a reachable MongoDB URI, a Groq API key, and two distinct token
+   secrets. Keep real credentials in `.env`, never in `.env.example`.
+2. Install dependencies with `npm install` in both `Backend` and `chat-ui`.
+3. Start MongoDB and run the backend in one terminal:
+
+   ```sh
+   npm --prefix Backend run dev
+   ```
+
+4. Run the frontend in a second terminal:
+
+   ```sh
+   npm --prefix chat-ui run dev
+   ```
+
+The UI uses `http://localhost:5000` by default. If you change either local
+port, set `NEXT_PUBLIC_API_URL` in `chat-ui/.env.local` and `FRONTEND_ORIGIN`
+in `Backend/.env` to match.
+
 ## Deploy with Render
 
 1. Push this project to a GitHub or GitLab repository.
