@@ -1,0 +1,37 @@
+services:
+  - type: web
+    name: my-chatgpt-api
+    runtime: node
+    plan: free
+    rootDir: Backend
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: MONGODB_URI
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: ACCESS_TOKEN_SECRET
+        generateValue: true
+      - key: REFRESH_TOKEN_SECRET
+        generateValue: true
+      - key: FRONTEND_ORIGIN
+        fromService:
+          type: web
+          name: my-chatgpt-ui
+          property: host
+
+  - type: web
+    name: my-chatgpt-ui
+    runtime: node
+    plan: free
+    rootDir: chat-ui
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        fromService:
+          type: web
+          name: my-chatgpt-api
+          property: host
