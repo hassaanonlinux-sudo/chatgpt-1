@@ -28,7 +28,7 @@ in `Backend/.env` to match.
 ## Deploy the frontend to Vercel
 
 Set `NEXT_PUBLIC_API_URL` in the Vercel project to
-`https://chatgpt-1-16fo.onrender.com`, then redeploy so the value is included
+`https://chatgpt-1-o5xd.onrender.com`, then redeploy so the value is included
 in the frontend build. This is also the frontend's configured default.
 
 In the Render backend service settings, set `FRONTEND_ORIGIN` to the exact
